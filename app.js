@@ -16,14 +16,13 @@ function addToCart(productName, price) {
 function displayCart() {
     const cartItemsContainer = document.getElementById("cart-items");
     const totalPriceElement = document.getElementById("total-price");
+    const checkoutButton = document.getElementById("checkout-button");
     
     if (!cartItemsContainer || !totalPriceElement) return;
 
-    // Clear existing content
     cartItemsContainer.innerHTML = "";
     let total = 0;
 
-    // Loop through cart items and display them
     cart.forEach((item, index) => {
         const itemElement = document.createElement("div");
         itemElement.classList.add("cart-item");
@@ -32,14 +31,17 @@ function displayCart() {
             <button onclick="removeFromCart(${index})">Remove</button>
         `;
         cartItemsContainer.appendChild(itemElement);
-
-        // Update total
         total += item.price;
     });
 
-    // Update total price in HTML
     totalPriceElement.textContent = total.toFixed(2);
+
+    // Show checkout button if there are items in the cart
+    if (checkoutButton) {
+        checkoutButton.style.display = cart.length > 0 ? "block" : "none";
+    }
 }
+
 
 // Function to remove item from cart
 function removeFromCart(index) {
