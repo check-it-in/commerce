@@ -57,3 +57,38 @@ function clearCart() {
 
 // Call displayCart on page load for cart.html
 window.onload = displayCart;
+
+// Display total in the checkout form
+function displayOrderTotal() {
+    const totalElement = document.getElementById("order-total");
+    if (totalElement) {
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        totalElement.textContent = total.toFixed(2);
+    }
+}
+
+// Handle form submission for checkout
+function handleCheckout(event) {
+    event.preventDefault(); // Prevent form from actually submitting
+
+    // Simulate order placement
+    document.getElementById("checkout-form").style.display = "none";
+    document.getElementById("confirmation-message").style.display = "block";
+
+    // Clear the cart and update localStorage
+    cart = [];
+    localStorage.removeItem("cart");
+}
+
+// Initialize displayOrderTotal on checkout page load
+window.onload = function() {
+    displayCart(); // For cart.html
+    displayOrderTotal(); // For checkout.html
+
+    // Attach checkout form handler
+    const checkoutForm = document.getElementById("checkout-form");
+    if (checkoutForm) {
+        checkoutForm.addEventListener("submit", handleCheckout);
+    }
+};
+
