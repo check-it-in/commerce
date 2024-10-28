@@ -1,7 +1,59 @@
-let cart = [];
+// Retrieve cart from localStorage or initialize as empty
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 function addToCart(productName, price) {
+    // Add item to the cart array
     cart.push({ name: productName, price: price });
+
+    // Update localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // Notify user
     alert(`${productName} has been added to your cart.`);
-    console.log(cart); // For testing
 }
+
+// Function to display cart items on the cart.html page
+function displayCart() {
+    const cartItemsContainer = document.getElementById("cart-items");
+    const totalPriceElement = document.getElementById("total-price");
+    
+    if (!cartItemsContainer || !totalPriceElement) return;
+
+    // Clear existing content
+    cartItemsContainer.innerHTML = "";
+    let total = 0;
+
+    // Loop through cart items and display them
+    cart.forEach((item, index) => {
+        const itemElement = document.createElement("div");
+        itemElement.classList.add("cart-item");
+        itemElement.innerHTML = `
+            <p>${item.name} - $${item.price.toFixed(2)}</p>
+            <button onclick="removeFromCart(${index})">Remove</button>
+        `;
+        cartItemsContainer.appendChild(itemElement);
+
+        // Update total
+        total += item.price;
+    });
+
+    // Update total price in HTML
+    totalPriceElement.textContent = total.toFixed(2);
+}
+
+// Function to remove item from cart
+function removeFromCart(index) {
+    cart.splice(index, 1); // Remove item from array
+    localStorage.setItem("cart", JSON.stringify(cart)); // Update localStorage
+    displayCart(); // Refresh cart display
+}
+
+// Function to clear the cart
+function clearCart() {
+    cart = [];
+    localStorage.removeItem("cart");
+    displayCart();
+}
+
+// Call displayCart on page load for cart.html
+window.onload = displayCart;
